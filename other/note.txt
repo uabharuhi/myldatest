@@ -1,0 +1,7 @@
+1.下載fb文章
+2.轉簡體(因為之後用到的斷詞函式庫對於簡體的斷詞比較準)
+3.斷詞  -->輸出到某個資料夾
+4.stop word處理
+5.決定vocabulary --> 文章中有出現的非stopwords
+6.得到term-freq matrix  
+7.輸出vocabulary和 term-freq matrix 到json裡面(可讀性)
