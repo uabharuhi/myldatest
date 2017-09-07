@@ -5,3 +5,10 @@
 5.決定vocabulary --> 文章中有出現的非stopwords
 6.得到term-freq matrix  
 7.輸出vocabulary和 term-freq matrix 到json裡面(可讀性)
+8.實行LDA
+
+問題:
+做出來結果非常的奇怪...
+而且還有一個問題 垃圾字很多
+-->先把tokenized(加上除去Stopwords輸出到一個檔案...)
+json.dump(l,f,ensure_ascii=False) -->沒有這一行輸出會變成literal string  "/u...." 幹

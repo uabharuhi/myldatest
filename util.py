@@ -7,6 +7,20 @@ from tqdm import tqdm
 import glob
 
 stopwords =  []
+openCC = OpenCC('t2s')
+
+
+def dump_json_utf8(obj,path):
+    with open(path,"w",encoding="utf-8") as f:
+        json.dump(obj,f,ensure_ascii=False)   
+
+def load_json_utf8(path):
+    obj = None
+    with open(path,"r",encoding="utf-8") as f:
+        s = f.read()
+        obj  =  json.loads(s,encoding="utf-8")
+    return obj
+
 def load_stopwords(path):
     global stopwords
     with open(path,"r",encoding="utf-8") as file:
@@ -19,8 +33,18 @@ def print_tokens(l):
 def print_utf8(s):
     sys.stdout.buffer.write(s.encode('utf-8'))
 
+def tokens_without_stopwords_from_file(path):
+    with open(path,"r",encoding="utf-8") as f:
+        s = f.read()
+        return tokenized_without_stopwords(s)
+
+
+def tokenized_without_stopwords(s):
+    l= word_segmentation(s)
+    return extract_stopwords(l)
+
 def word_segmentation(s):
-    openCC = OpenCC('t2s')  # convert from Simplified Chinese to Traditional Chinese
+   # convert from Simplified Chinese to Traditional Chinese
     converted = openCC.convert(s)
     seg_list = jieba.cut(converted, cut_all=False)
     return list(seg_list)
@@ -30,15 +54,12 @@ def extract_stopwords(word_list):
     return l
 
 def load_vocab():
-    l = None
-    with open(config.vocab_path,"r",encoding="utf-8") as f:
-        l = json.loads(f.read())
-        #util.print_tokens(l)
+    l = load_json_utf8(config.vocab_path)
     return l
 
 def get_document_words(path):
     doc_tokens = []
-    for filename in tqdm(glob.glob("./posts/*.txt")):
+    for filename in tqdm(glob.glob(path)):
         with open(filename,"r",encoding="utf-8") as f:
             text = f.read()
             _tokens = word_segmentation(text)
@@ -81,7 +102,17 @@ def show_result(res):
             print_utf8("[%s %.3f] "%(pair[0],pair[1]))
         print(" ")
 
+def save_tokens_to_file(path,save_to):
+        tokens =  tokens_from_file(path)
+        with open(save_to,"w",encoding="utf-8") as f:
+            for w in tokens:
+                f.write(w+"\n")
 
+def tokens_from_file(path):
+    with open(path,"r",encoding="utf-8") as f:
+        s = f.read()
+        l = tokenized_without_stopwords(s)
+    return  l
 
 
 load_stopwords(config.stopwordpath)

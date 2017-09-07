@@ -4,6 +4,16 @@ import util
 import json
 
 
+def test_print_utf8_on_console():
+    #from a file
+    pass
+def test_save_tokens2file():
+    util.save_tokens_to_file("./data/1.txt","./temp/out.txt")
+
+    ##can not write to console because comsole is not support utf-8..
+    #for token in tokens :
+        #print(token)
+
 def test_stopwords():
     #l = util.word_segmentation("i love除了 you那邊好像 ＃ 那一個 ＄ 非但")
     #l = util.extract_stopwords(l)
@@ -40,13 +50,9 @@ def test_tfmatrix():
         
         
 if __name__== "__main__": 
-    scripts.build()
-    scripts.run()
 
-
-    #scripts.create_tf_matrix()
-    # print(len(util.load_vocab()))
-
+    #scripts.build()
+    scripts.run(topic_num=2,iter_num=1000,display_n=5)
     
 
 
