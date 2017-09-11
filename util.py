@@ -5,6 +5,8 @@ import config
 import json
 from tqdm import tqdm
 import glob
+import run
+import util
 
 stopwords =  []
 openCC = OpenCC('t2s')
@@ -17,8 +19,7 @@ def dump_json_utf8(obj,path):
 def load_json_utf8(path):
     obj = None
     with open(path,"r",encoding="utf-8") as f:
-        s = f.read()
-        obj  =  json.loads(s,encoding="utf-8")
+        obj  =  json.load(f,encoding="utf-8")
     return obj
 
 def load_stopwords(path):
@@ -45,7 +46,10 @@ def tokenized_without_stopwords(s):
 
 def word_segmentation(s):
    # convert from Simplified Chinese to Traditional Chinese
-    converted = openCC.convert(s)
+    if run.convert:
+        converted = openCC.convert(s)
+    else:
+        converted = s
     seg_list = jieba.cut(converted, cut_all=False)
     return list(seg_list)
 
@@ -70,7 +74,11 @@ def get_document_words(path):
 def doc_tokens2id(doc_tokens,vocab):
     doc_ids = []
     id_dict  = {}
-    for i,word in enumerate(vocab):
+    for i,word in enumerate(vocab): 
+        if word.find("x00"):
+            #print("%d %s"%(i,word))
+            util.print_utf8(word)
+            print(" ")
         id_dict[word] = i
 
     for words in doc_tokens:
@@ -79,7 +87,7 @@ def doc_tokens2id(doc_tokens,vocab):
             if word in id_dict:
                 l.append(id_dict[word])
             else:
-                print('doc_tokens2id--> word not in vocabulary set??? ')
+                print('doc_tokens2id--> word %s not in vocabulary set '%(word.encode("utf-8").decode("utf-8")))
         doc_ids.append(l)
     return doc_ids,id_dict
 
@@ -99,6 +107,7 @@ def show_result(res):
         word_prob_tuple = zip(info[0],info[1])
         print("Topic %d"%(topic_i))
         for i,pair in enumerate(word_prob_tuple):
+            #print("[%s %.3f] "%(pair[0],pair[1]))
             print_utf8("[%s %.3f] "%(pair[0],pair[1]))
         print(" ")
 

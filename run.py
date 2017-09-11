@@ -2,7 +2,7 @@ import scripts
 import config
 import util
 import json
-import config
+convert = None
 
 def test_print_utf8_on_console():
     #from a file
@@ -46,10 +46,42 @@ def test_tfmatrix():
 
 
         
+import argparse
 
-        
-        
+
+#run.py b  [-p <datapath>]] 
+#       r  [-p <tfpath>] t <num_topic>  i <iter_num> d <display_num>]   
 if __name__== "__main__": 
+    parser = argparse.ArgumentParser(add_help=False)
+    subparsers = parser.add_subparsers(help='sub-command help',dest='parser_name')
+
+    build_parser =   subparsers .add_parser('build')
+    build_parser.add_argument('-p',"--datapath",default=config.data_path)
+    build_parser.add_argument('-c',"--convert",action='store_true')
+
+    run_parser =  subparsers .add_parser('run')
+    run_parser.add_argument('-p','--tfpath',default=config.tfmatrix_path)
+    run_parser.add_argument('-rp','--result_path',default=config.result_path)
+    run_parser.add_argument('-c',"--convert",action='store_true')
+    run_parser.add_argument('t',type=int)
+    run_parser.add_argument('i',type=int)
+    run_parser.add_argument('d',type=int)
+
+  
+    args = parser.parse_args()
+
+    
+    convert =  False
+  
+    #有提供-c參數代表要繁體轉簡體
+    if args.parser_name == 'build':
+        #print(args.datapath)
+        scripts.build(data_path=args.datapath)
+    elif args.parser_name == 'run':
+        scripts.run(args.tfpath,args.result_path,args.t,args.i,args.d)
+        
+
+
 
     #scripts.build()
     #scripts.run(topic_num=2,iter_num=1000,display_n=5)

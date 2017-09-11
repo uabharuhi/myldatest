@@ -12,3 +12,16 @@
 而且還有一個問題 垃圾字很多
 -->先把tokenized(加上除去Stopwords輸出到一個檔案...)
 json.dump(l,f,ensure_ascii=False) -->沒有這一行輸出會變成literal string  "/u...." 幹
+
+問題
+就算沒有編碼問題弄出來結果還是很爛
+因為沒有把動詞砍光光<--可能原因
+為了驗證就去找dl4j的資料拿來train
+
+問題
+加入command line的模式方便訓練不一樣的資料...
+但是中間產生的json檔(結果和term freq如果沒設置好都會被覆蓋掉)-->用git branch
+
+問題
+訓練dl4j的時候 最後的topic word一直會出現"/x00"(空字串)
+但是完全不知道原因= =

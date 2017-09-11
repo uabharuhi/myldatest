@@ -1,14 +1,20 @@
-import numpy as np
-import lda
-import lda.datasets
-X = lda.datasets.load_reuters()
-vocab = lda.datasets.load_reuters_vocab()
-titles = lda.datasets.load_reuters_titles()
-model = lda.LDA(n_topics=20, n_iter=1500, random_state=1)
-model.fit(X)  # model.fit_transform(X) is also available
-topic_word = model.topic_word_  # model.components_ also works
-n_top_words = 8
-for i, topic_dist in enumerate(topic_word):
-    topic_words = np.array(vocab)[np.argsort(topic_dist)][:-(n_top_words+1):-1]
-    print('Topic {}: {}'.format(i, ' '.join(topic_words)))
+import util
+import  config
+obj = util.load_json_utf8(config.tfmatrix_path)
+s=str(obj)
+i=s.find("x00")
+util.print_utf8(s[i-20:i+20])
+print(" ")
 
+i=s.find("39474")
+util.print_utf8(s[i-20:i+20])
+print(" ")
+i=s.find("told")
+util.print_utf8(s[i-20:i+20])
+print(" ")
+i=s.find("MRT")
+util.print_utf8(s[i-20:i+20])
+print(" ")
+i=s.find("observe")
+util.print_utf8(s[i-20:i+20])
+print(" ")

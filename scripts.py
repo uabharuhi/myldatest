@@ -26,11 +26,11 @@ def  create_vocab(data_path,dump=True):
         util.dump_json_utf8(list(vocab),config.vocab_path)
     return vocab
 
-def create_tf_matrix(dump=True):
+def create_tf_matrix(data_path,dump=True):
     print('create term frequncy matrix')
     vocab = util.load_vocab()
     print("vocab size",len(vocab))
-    word_matrix = util.get_document_words(config.data_path)
+    word_matrix = util.get_document_words(data_path)
     id_matrix,id_table = util.doc_tokens2id(word_matrix,vocab)
     tf_matrix = util.tf_matrix(id_matrix,len(vocab))
     if dump:
@@ -39,20 +39,22 @@ def create_tf_matrix(dump=True):
     return tf_matrix
 
 
-def build(load=False):
+def build(data_path,load=False):
     print('buiding ....')
     if load:
         load_my_posts()
-    create_vocab(data_path=config.data_path)
-    create_tf_matrix()
+    create_vocab(data_path)
+    create_tf_matrix(data_path)
 
-def run(topic_num,iter_num,display_n):
+def run(tf_matrix_path,result_path,topic_num,iter_num,display_n):
     print("running...")
-    obj = util.load_json_utf8(config.tfmatrix_path)
+    obj = util.load_json_utf8(tf_matrix_path)
     w2id_table,tf = obj["lookup"],obj["tf_matrix"]
     print(len(w2id_table))
+    print(np.array(tf).shape)
+   
     
-    id2word_table = [None]*len(obj["lookup"])
+    id2word_table = ['12345']*len(obj["lookup"])
     for word in list(w2id_table.keys()):
         id2word_table[w2id_table[word]] = word
 
@@ -69,11 +71,13 @@ def run(topic_num,iter_num,display_n):
     print("get result ...")
     for i, topic_dist in enumerate(topic_word):
         top_n_idx = np.argsort(topic_dist)[:-(n_top_words+1):-1]
+        print(i)
+        print(top_n_idx)
         top_n_prob  = topic_dist[top_n_idx]
         topic_words = np.array(id2word_table)[top_n_idx]
         res.append([   topic_words.tolist(),   top_n_prob.tolist() ])
-    print("save result to %s"%(config.result_path))
+    print("save result to %s"%(result_path))
 
     util.show_result(res)
 
-    util.dump_json_utf8(res,config.result_path)
+    util.dump_json_utf8(res,result_path)
