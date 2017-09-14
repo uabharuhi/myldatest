@@ -1,2 +1,8 @@
 posts/
 __pycache__/
+words/
+*.json
+LDA4j-master/
+fb/
+data/
+mini/
